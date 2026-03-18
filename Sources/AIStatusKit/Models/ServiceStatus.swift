@@ -23,3 +23,14 @@ public enum ServiceStatus: Comparable, Sendable {
         statuses.max() ?? .unknown
     }
 }
+
+extension ServiceStatus: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .operational: "operational"
+        case .minor: "degraded"
+        case .major: "major outage"
+        case .unknown: "unknown"
+        }
+    }
+}
