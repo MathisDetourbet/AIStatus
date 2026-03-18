@@ -19,6 +19,7 @@ struct AIStatusBarApp: App {
         } label: {
             Image(systemName: "circle.fill")
                 .foregroundStyle(monitor.overallStatus.color)
+                .task { monitor.startMonitoring() }
         }
         .menuBarExtraStyle(.menu)
     }
