@@ -1,3 +1,4 @@
+import SwiftUI
 import Testing
 @testable import AIStatusKit
 
@@ -30,4 +31,20 @@ import Testing
 
 @Test func `worst of empty returns unknown`() {
     #expect(ServiceStatus.worst([]) == .unknown)
+}
+
+@Test func `operational color is green`() {
+    #expect(ServiceStatus.operational.color == .green)
+}
+
+@Test func `minor color is orange`() {
+    #expect(ServiceStatus.minor.color == .orange)
+}
+
+@Test func `major color is red`() {
+    #expect(ServiceStatus.major.color == .red)
+}
+
+@Test func `unknown color is gray`() {
+    #expect(ServiceStatus.unknown.color == .gray)
 }

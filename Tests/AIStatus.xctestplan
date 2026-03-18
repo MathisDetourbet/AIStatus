@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "C7369785-AB49-48DF-9B08-49B5702533F1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:",
+      "identifier" : "AIStatusBar",
+      "name" : "AIStatusBar"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AIStatusKitTests",
+        "name" : "AIStatusKitTests"
+      }
+    }
+  ],
+  "version" : 1
+}
