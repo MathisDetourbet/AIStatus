@@ -18,7 +18,8 @@ let package = Package(
         ),
         .executableTarget(
             name: "AIStatusBar",
-            dependencies: ["AIStatusKit"]
+            dependencies: ["AIStatusKit"],
+            resources: [.process("Resources")]
         ),
         .executableTarget(
             name: "aistatus",

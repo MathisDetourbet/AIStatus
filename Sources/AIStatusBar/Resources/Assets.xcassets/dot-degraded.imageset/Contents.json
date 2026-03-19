@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "dot-degraded.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

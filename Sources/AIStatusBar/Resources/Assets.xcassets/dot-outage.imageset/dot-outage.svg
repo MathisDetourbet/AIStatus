@@ -1,0 +1,7 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer glow -->
+  <circle cx="12" cy="12" r="10" fill="#ef4444" opacity="0.15"/>
+  
+  <!-- Main dot -->
+  <circle cx="12" cy="12" r="7" fill="#ef4444"/>
+</svg>

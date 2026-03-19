@@ -1,10 +1,9 @@
 import SwiftUI
-import AppKit
 import AIStatusKit
 
 @main
 struct AIStatusBarApp: App {
-    @State private var monitor = StatusMonitor(providers: Services.all)
+    @State private var monitor = StatusMonitor(providers: AI.all)
 
     init() {
         NSApplication.shared.setActivationPolicy(.accessory)
@@ -12,14 +11,10 @@ struct AIStatusBarApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            Button("Quit") {
-                NSApplication.shared.terminate(nil)
-            }
-            .keyboardShortcut("q")
+            StatusMenuContent(monitor: monitor)
         } label: {
-            Image(systemName: "circle.fill")
-                .foregroundStyle(monitor.overallStatus.color)
-                .task { monitor.startMonitoring() }
+            Image(monitor.overallStatus.dotImageName, bundle: .module)
+                .renderingMode(.original)
         }
         .menuBarExtraStyle(.menu)
     }
