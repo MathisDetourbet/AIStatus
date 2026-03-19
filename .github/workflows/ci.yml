@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build & Test
+        run: |
+          xcodebuild test \
+            -scheme AIStatus-Package \
+            -testPlan AIStatus \
+            -destination 'platform=macOS' \
+            -resultBundlePath TestResults.xcresult \
+            -enableCodeCoverage YES
+
+      - name: Code Coverage
+        if: success() || failure()
+        uses: slidoapp/xcresulttool@v3.1.1
+        with:
+          path: TestResults.xcresult
+          upload-bundles: never
