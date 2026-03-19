@@ -16,7 +16,6 @@ jobs:
         run: |
           xcodebuild test \
             -scheme AIStatus-Package \
-            -testPlan AIStatus \
             -destination 'platform=macOS' \
             -resultBundlePath TestResults.xcresult \
             -enableCodeCoverage YES
