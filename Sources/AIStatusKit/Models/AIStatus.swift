@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum ServiceStatus: Comparable, Sendable {
+public enum AIStatus: Comparable, Sendable {
     case operational
     case minor
     case major
@@ -19,12 +19,21 @@ public enum ServiceStatus: Comparable, Sendable {
         }
     }
 
-    public static func worst(_ statuses: [ServiceStatus]) -> ServiceStatus {
+    public var dotImageName: String {
+        switch self {
+        case .operational: "dot-operational"
+        case .minor: "dot-degraded"
+        case .major: "dot-outage"
+        case .unknown: "dot-unknown"
+        }
+    }
+
+    public static func worst(_ statuses: [AIStatus]) -> AIStatus {
         statuses.max() ?? .unknown
     }
 }
 
-extension ServiceStatus: CustomStringConvertible {
+extension AIStatus: CustomStringConvertible {
     public var description: String {
         switch self {
         case .operational: "operational"

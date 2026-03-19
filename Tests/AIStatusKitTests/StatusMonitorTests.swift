@@ -5,15 +5,15 @@ import Testing
 struct StubProvider: StatusProvider {
     let name: String
     let baseURL: URL
-    let result: ServiceStatus
+    let result: AIStatus
 
-    init(name: String, result: ServiceStatus) {
+    init(name: String, result: AIStatus) {
         self.name = name
         self.baseURL = URL(string: "https://example.com")!
         self.result = result
     }
 
-    func fetchStatus() async throws -> ServiceStatus {
+    func fetchStatus() async throws -> AIStatus {
         result
     }
 }

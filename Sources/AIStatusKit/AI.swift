@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Services {
+public enum AI {
     public static let claude = StatuspageProvider(
         name: "Claude",
         baseURL: URL(string: "https://status.claude.com")!

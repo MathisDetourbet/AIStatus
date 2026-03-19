@@ -4,26 +4,32 @@ import Observation
 @Observable
 @MainActor
 public final class StatusMonitor {
-    public private(set) var statuses: [String: ServiceStatus] = [:]
+    public private(set) var statuses: [String: AIStatus] = [:]
     private let providers: [any StatusProvider]
     private let interval: TimeInterval
     private var task: Task<Void, Never>?
 
-    public var overallStatus: ServiceStatus {
-        ServiceStatus.worst(Array(statuses.values))
+    public var overallStatus: AIStatus {
+        AIStatus.worst(Array(statuses.values))
     }
 
-    public init(providers: [any StatusProvider], interval: TimeInterval = 60) {
+    public init(providers: [any StatusProvider], interval: TimeInterval = 30) {
         self.providers = providers
         self.interval = interval
+        startMonitoring()
     }
 
     public func refresh() async {
-        await withTaskGroup(of: (String, ServiceStatus).self) { group in
+        await withTaskGroup(of: (String, AIStatus).self) { group in
             for provider in providers {
                 group.addTask {
-                    let status = (try? await provider.fetchStatus()) ?? .unknown
-                    return (provider.name, status)
+                    do {
+                        let status = try await provider.fetchStatus()
+                        return (provider.name, status)
+                    } catch {
+                        print("[AIStatus] \(provider.name) fetch failed: \(error)")
+                        return (provider.name, .unknown)
+                    }
                 }
             }
             for await (name, status) in group {

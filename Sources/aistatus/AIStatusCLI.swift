@@ -4,7 +4,7 @@ import AIStatusKit
 @main
 struct AIStatusCLI {
     static func main() async {
-        let providers = Services.all
+        let providers = AI.all
         var exitCode: Int32 = 0
 
         for provider in providers {

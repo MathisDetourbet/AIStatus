@@ -8,7 +8,7 @@ public struct StatusResponse: Decodable, Sendable {
         public let description: String
     }
 
-    public static func mapIndicator(_ indicator: String) -> ServiceStatus {
+    public static func mapIndicator(_ indicator: String) -> AIStatus {
         switch indicator {
         case "none": .operational
         case "minor": .minor

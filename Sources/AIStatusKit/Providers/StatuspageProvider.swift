@@ -13,7 +13,7 @@ public struct StatuspageProvider: StatusProvider {
         self.session = session
     }
 
-    public func fetchStatus() async throws -> ServiceStatus {
+    public func fetchStatus() async throws -> AIStatus {
         let (data, _) = try await session.data(from: statusURL)
         let response = try JSONDecoder().decode(StatusResponse.self, from: data)
         return StatusResponse.mapIndicator(response.status.indicator)
