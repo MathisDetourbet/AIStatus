@@ -19,15 +19,33 @@ AIStatus gives you a quick way to check if AI services (Claude, and more to come
 
 ## Install
 
+### Homebrew
+
+```bash
+brew tap MathisDetourbet/tap
+
+# CLI
+brew install aistatus
+
+# Menu Bar App
+brew install --cask aistatusbar
+```
+
+### Download from GitHub Releases
+
+Pre-built universal binaries (arm64 + x86\_64) are available on the [Releases](https://github.com/MathisDetourbet/AIStatus/releases) page.
+
+> **Note:** The app is not yet notarized. On first launch, right-click the app and select "Open" to bypass Gatekeeper.
+
 ### From source
 
 ```bash
 git clone https://github.com/MathisDetourbet/AIStatus.git
 cd AIStatus
-swift build
+swift build -c release
 ```
 
-### Run directly
+Run directly:
 
 ```bash
 # CLI

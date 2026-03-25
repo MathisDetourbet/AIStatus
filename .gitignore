@@ -1,3 +1,5 @@
 .build/
 .swiftpm/
 .claude/
+build/
+dist/

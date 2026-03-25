@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Build universal binaries
+        run: swift build -c release --arch arm64 --arch x86_64
+
+      - name: Create .app bundle
+        run: ./scripts/bundle-app.sh "${{ steps.version.outputs.VERSION }}"
+
+      - name: Create release archives
+        run: |
+          mkdir -p dist
+          VERSION="${{ steps.version.outputs.VERSION }}"
+
+          # Menu bar app as zip (ditto preserves macOS metadata)
+          ditto -c -k --keepParent build/AIStatusBar.app "dist/AIStatusBar-${VERSION}-macos-universal.zip"
+
+          # CLI tool as tarball
+          tar -czf "dist/aistatus-${VERSION}-macos-universal.tar.gz" \
+            -C .build/apple/Products/Release aistatus
+
+      - name: Generate checksums
+        run: |
+          cd dist
+          shasum -a 256 *.zip *.tar.gz > checksums-sha256.txt
+          cat checksums-sha256.txt
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/AIStatusBar-*.zip
+            dist/aistatus-*.tar.gz
+            dist/checksums-sha256.txt
+
+      - name: Update Homebrew formula
+        uses: mislav/bump-homebrew-formula-action@v3
+        if: ${{ !contains(github.ref_name, '-') }}  # Skip pre-releases (e.g. v1.0.0-beta)
+        with:
+          formula-name: aistatus
+          homebrew-tap: MathisDetourbet/homebrew-tap
+          download-url: https://github.com/MathisDetourbet/AIStatus/releases/download/${{ github.ref_name }}/aistatus-${{ steps.version.outputs.VERSION }}-macos-universal.tar.gz
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
