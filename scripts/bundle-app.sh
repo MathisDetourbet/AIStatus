@@ -22,6 +22,10 @@ cp "$BUILD_DIR/$APP_NAME" "$APP_DIR/Contents/MacOS/"
 # Copy SPM resource bundles
 find "$BUILD_DIR" -name "*.bundle" -maxdepth 1 -exec cp -R {} "$APP_DIR/Contents/Resources/" \;
 
+# Copy app icon
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cp "$SCRIPT_DIR/../Sources/AIStatusBar/Resources/AppIcon.icns" "$APP_DIR/Contents/Resources/"
+
 # Generate Info.plist
 cat > "$APP_DIR/Contents/Info.plist" << PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -49,6 +53,8 @@ cat > "$APP_DIR/Contents/Info.plist" << PLIST
     <string>NSApplication</string>
     <key>LSUIElement</key>
     <true/>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>LSMinimumSystemVersion</key>
     <string>15.0</string>
 </dict>
