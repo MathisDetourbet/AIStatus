@@ -65,10 +65,55 @@ jobs:
 
       - name: Update Homebrew formula
         uses: mislav/bump-homebrew-formula-action@v3
-        if: ${{ !contains(github.ref_name, '-') }}  # Skip pre-releases (e.g. v1.0.0-beta)
+        if: ${{ !contains(github.ref_name, '-') }}
         with:
           formula-name: aistatus
           homebrew-tap: MathisDetourbet/homebrew-tap
           download-url: https://github.com/MathisDetourbet/AIStatus/releases/download/${{ github.ref_name }}/aistatus-${{ steps.version.outputs.VERSION }}-macos-universal.tar.gz
         env:
           COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+      - name: Update Homebrew cask
+        if: ${{ !contains(github.ref_name, '-') }}
+        env:
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          APP_SHA=$(shasum -a 256 dist/AIStatusBar-${VERSION}-macos-universal.zip | awk '{print $1}')
+
+          # Fetch current cask file from tap repo
+          CURRENT=$(curl -s -H "Authorization: token $HOMEBREW_TAP_TOKEN" \
+            https://api.github.com/repos/MathisDetourbet/homebrew-tap/contents/Casks/aistatusbar.rb)
+          FILE_SHA=$(echo "$CURRENT" | python3 -c "import sys,json; print(json.load(sys.stdin)['sha'])")
+
+          # Generate updated cask content
+          CASK_CONTENT=$(cat <<'CASK'
+          cask "aistatusbar" do
+            version "VERSION_PLACEHOLDER"
+            sha256 "SHA_PLACEHOLDER"
+
+            url "https://github.com/MathisDetourbet/AIStatus/releases/download/v#{version}/AIStatusBar-#{version}-macos-universal.zip"
+            name "AIStatusBar"
+            desc "Menu bar app showing AI service status"
+            homepage "https://github.com/MathisDetourbet/AIStatus"
+
+            depends_on macos: ">= :sequoia"
+
+            app "AIStatusBar.app"
+
+            zap trash: [
+              "~/Library/Preferences/com.mathisdetourbet.AIStatusBar.plist",
+            ]
+          end
+          CASK
+          )
+          CASK_CONTENT="${CASK_CONTENT//VERSION_PLACEHOLDER/$VERSION}"
+          CASK_CONTENT="${CASK_CONTENT//SHA_PLACEHOLDER/$APP_SHA}"
+          ENCODED=$(echo -n "$CASK_CONTENT" | base64)
+
+          # Push updated cask to tap repo
+          curl -s -X PUT \
+            -H "Authorization: token $HOMEBREW_TAP_TOKEN" \
+            -H "Content-Type: application/json" \
+            https://api.github.com/repos/MathisDetourbet/homebrew-tap/contents/Casks/aistatusbar.rb \
+            -d "{\"message\":\"aistatusbar ${VERSION}\",\"content\":\"${ENCODED}\",\"sha\":\"${FILE_SHA}\"}"
