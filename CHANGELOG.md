@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-03-25
+
+### Added
+
+- App icon for AIStatusBar in Applications folder and Dock
+- Auto-update of Homebrew cask on release
+
+### Fixed
+
+- Release pipeline: auto-tag now triggers downstream release workflow
+
 ## [0.2.0] - 2026-03-25
 
 ### Added
@@ -22,5 +33,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Claude (Anthropic) status monitoring via Statuspage.io API
 - 30-second automatic polling interval
 
+[0.3.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/MathisDetourbet/AIStatus/releases/tag/v0.1.0
