@@ -1,21 +1,44 @@
 import Foundation
+import NonEmpty
 import Observation
 
 @Observable
 @MainActor
 public final class StatusMonitor {
+    private static let selectedProviderKey = "selectedProvider"
+
     public private(set) var statuses: [String: AIStatus] = [:]
-    private let providers: [any StatusProvider]
+    public let providers: NonEmptyArray<any StatusProvider>
     private let interval: TimeInterval
     private var task: Task<Void, Never>?
+    private let defaults: UserDefaults
+
+    public var selectedProvider: any StatusProvider {
+        didSet {
+            defaults.set(selectedProvider.name, forKey: Self.selectedProviderKey)
+        }
+    }
 
     public var overallStatus: AIStatus {
         AIStatus.worst(Array(statuses.values))
     }
 
-    public init(providers: [any StatusProvider], interval: TimeInterval = 30) {
+    public var selectedStatus: AIStatus {
+        statuses[selectedProvider.name] ?? .unknown
+    }
+
+    public init(
+        providers: NonEmptyArray<any StatusProvider>,
+        interval: TimeInterval = 30,
+        defaults: UserDefaults = .aiStatus
+    ) {
         self.providers = providers
         self.interval = interval
+        self.defaults = defaults
+
+        let savedName = defaults.string(forKey: Self.selectedProviderKey)
+        self.selectedProvider = providers.first { $0.name == savedName } ?? providers.first
+
         startMonitoring()
     }
 
