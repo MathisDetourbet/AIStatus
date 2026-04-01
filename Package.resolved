@@ -1,0 +1,15 @@
+{
+  "originHash" : "6d72989f534beaf403d9c595298d6a4dbb51163e61e41a0ec720eaad7eb8529d",
+  "pins" : [
+    {
+      "identity" : "swift-nonempty",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-nonempty",
+      "state" : {
+        "revision" : "1fd3f067ebc3900d200aa7e977fdb614cc5533bc",
+        "version" : "0.5.0"
+      }
+    }
+  ],
+  "version" : 3
+}

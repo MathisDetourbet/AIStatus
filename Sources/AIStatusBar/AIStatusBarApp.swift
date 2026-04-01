@@ -13,7 +13,7 @@ struct AIStatusBarApp: App {
         MenuBarExtra {
             StatusMenuContent(monitor: monitor)
         } label: {
-            Image(monitor.overallStatus.dotImageName, bundle: .module)
+            Image(monitor.selectedStatus.dotImageName, bundle: .module)
                 .renderingMode(.original)
         }
         .menuBarExtraStyle(.menu)

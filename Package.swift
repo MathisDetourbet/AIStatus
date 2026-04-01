@@ -12,9 +12,15 @@ let package = Package(
         .executable(name: "AIStatusBar", targets: ["AIStatusBar"]),
         .executable(name: "aistatus", targets: ["aistatus"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/pointfreeco/swift-nonempty", from: "0.5.0"),
+    ],
     targets: [
         .target(
-            name: "AIStatusKit"
+            name: "AIStatusKit",
+            dependencies: [
+                .product(name: "NonEmpty", package: "swift-nonempty"),
+            ]
         ),
         .executableTarget(
             name: "AIStatusBar",
