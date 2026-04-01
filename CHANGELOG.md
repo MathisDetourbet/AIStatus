@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] - 2026-04-01
+
+### Added
+
+- Multi-AI service monitoring: OpenAI and Cursor alongside Claude
+- Service picker in the menu bar to select which provider drives the status dot
+- Persistent provider selection via UserDefaults
+- Type-safe non-empty provider list using `swift-nonempty`
+
 ## [0.3.0] - 2026-03-25
 
 ### Added
@@ -33,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Claude (Anthropic) status monitoring via Statuspage.io API
 - 30-second automatic polling interval
 
+[0.4.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/MathisDetourbet/AIStatus/releases/tag/v0.1.0
