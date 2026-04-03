@@ -12,9 +12,9 @@ Monitor AI service health from your menu bar or terminal.
 
 ## What is it?
 
-AIStatus gives you a quick way to check if AI services (Claude, and more to come) are up and running. It comes in two flavors:
+AIStatus gives you a quick way to check if AI services are up and running. It comes in two flavors:
 
-- **Menu Bar App** — A colored dot that stays in your menu bar. Green = all good, orange = degraded, red = outage, gray = unknown.
+- **Menu Bar App** — A colored dot that stays in your menu bar. Pick which service to watch — Green = all good, orange = degraded, red = outage, gray = unknown.
 - **CLI** — Run `aistatus` in your terminal for a quick status check with colored output.
 
 ## Install
@@ -59,6 +59,8 @@ swift run AIStatusBar
 
 ```
 ✓ Claude: operational
+✓ OpenAI: operational
+✓ Cursor: operational
 ```
 
 Exit codes: `0` all operational, `1` degraded/outage, `2` unknown/error.
@@ -67,9 +69,11 @@ Exit codes: `0` all operational, `1` degraded/outage, `2` unknown/error.
 
 | Service | Status Page |
 |---------|------------|
-| Claude (Anthropic) | [status.anthropic.com](https://status.anthropic.com) |
+| Claude | [status.claude.com](https://status.claude.com) |
+| OpenAI | [status.openai.com](https://status.openai.com) |
+| Cursor | [status.cursor.com](https://status.cursor.com) |
 
-More coming soon — PRs welcome!
+PRs welcome to add more!
 
 ## Contributing
 
