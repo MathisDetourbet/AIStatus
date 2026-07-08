@@ -77,13 +77,29 @@ PRs welcome to add more!
 
 ## Claude Usage
 
-The menu bar app can display your personal Claude plan usage — the same 5-hour session % and weekly % that Claude Code's `/usage` command shows. The number next to the dot is whichever limit you'll hit first.
+The menu bar app shows your personal Claude plan usage in real time — the same 5-hour session % and weekly % that Claude Code's `/usage` command reports.
 
-Requirements:
+The number next to the status dot is the **limiting** usage — whichever of your session or weekly window you'll hit first:
 
-- [Claude Code](https://claude.com/claude-code) installed and signed in (the app reuses its credentials from the macOS Keychain — you'll be asked to allow access once)
+```
+●  61%
+```
 
-If Claude Code isn't installed, the app simply shows the status dot as before.
+Open the menu for the full breakdown, including when each window resets:
+
+```
+Claude Usage
+Session (5h)   42% · resets 3 PM
+Week           61% · resets Tue
+```
+
+It refreshes automatically every few minutes (and again each time you open the menu), backing off if the API rate-limits it.
+
+### Requirements
+
+- [Claude Code](https://claude.com/claude-code) installed and signed in. The app reuses its OAuth credentials from the macOS Keychain — you'll be asked to allow access once, and no separate sign-in is needed.
+
+If Claude Code isn't installed, the app simply shows the status dot as before. If your token has expired, the menu prompts you to run `claude` in a terminal to refresh it.
 
 ## Contributing
 
