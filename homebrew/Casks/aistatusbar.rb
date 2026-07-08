@@ -7,7 +7,7 @@ cask "aistatusbar" do
   desc "Menu bar app showing AI service status"
   homepage "https://github.com/MathisDetourbet/AIStatus"
 
-  depends_on macos: ">= :sequoia"
+  depends_on macos: :sequoia
 
   app "AIStatusBar.app"
 
