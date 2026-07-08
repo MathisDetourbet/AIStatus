@@ -26,6 +26,7 @@ public final class UsageMonitor {
     private let interval: TimeInterval
     private let backoffInterval: TimeInterval
     private var task: Task<Void, Never>?
+    private var isRefreshing = false
 
     public init(
         provider: any UsageProviding,
@@ -43,6 +44,11 @@ public final class UsageMonitor {
     }
 
     public func refresh() async {
+        // The polling loop and the menu-open refresh both call this; a single
+        // in-flight fetch is enough, and the usage endpoint is rate-limit sensitive.
+        guard !isRefreshing else { return }
+        isRefreshing = true
+        defer { isRefreshing = false }
         do {
             state = .available(try await provider.fetchUsage())
             isRateLimited = false

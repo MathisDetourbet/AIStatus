@@ -18,10 +18,55 @@ final class MockUsageProvider: UsageProviding, Sendable {
     }
 }
 
+/// Counts fetches and holds each one open until `release()` is called, so a
+/// second refresh can be attempted while the first is still in flight.
+final class GatedUsageProvider: UsageProviding, Sendable {
+    private let snapshot: UsageSnapshot
+    let callCount = Mutex(0)
+    private let gate = Mutex<CheckedContinuation<Void, Never>?>(nil)
+
+    init(snapshot: UsageSnapshot) {
+        self.snapshot = snapshot
+    }
+
+    func fetchUsage() async throws -> UsageSnapshot {
+        callCount.withLock { $0 += 1 }
+        await withCheckedContinuation { continuation in
+            gate.withLock { $0 = continuation }
+        }
+        return snapshot
+    }
+
+    func release() {
+        let continuation = gate.withLock { stored -> CheckedContinuation<Void, Never>? in
+            defer { stored = nil }
+            return stored
+        }
+        continuation?.resume()
+    }
+}
+
 @Suite("Usage Monitor")
 @MainActor
 struct UsageMonitorTests {
     let snapshot = UsageSnapshot(sessionUtilization: 42, sessionResetsAt: nil, weeklyUtilization: 61, weeklyResetsAt: nil)
+
+    @Test func `overlapping refresh triggers only one fetch`() async {
+        let provider = GatedUsageProvider(snapshot: snapshot)
+        let monitor = UsageMonitor(provider: provider, autoStart: false)
+
+        let first = Task { await monitor.refresh() }
+        while provider.callCount.withLock({ $0 }) == 0 { await Task.yield() }
+
+        // First fetch is now suspended inside the provider; a second refresh
+        // should be dropped by the in-flight guard rather than call fetch again.
+        await monitor.refresh()
+        #expect(provider.callCount.withLock { $0 } == 1)
+
+        provider.release()
+        await first.value
+        #expect(monitor.state == .available(snapshot))
+    }
 
     @Test func `successful fetch yields available`() async {
         let monitor = UsageMonitor(provider: MockUsageProvider(results: [.success(snapshot)]), autoStart: false)
