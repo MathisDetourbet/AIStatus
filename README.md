@@ -14,7 +14,7 @@ Monitor AI service health from your menu bar or terminal.
 
 AIStatus gives you a quick way to check if AI services are up and running. It comes in two flavors:
 
-- **Menu Bar App** — A colored dot that stays in your menu bar. Pick which service to watch — Green = all good, orange = degraded, red = outage, gray = unknown.
+- **Menu Bar App** — A colored dot that stays in your menu bar. Pick which service to watch — Green = all good, orange = degraded, red = outage, gray = unknown. If you use Claude Code, it also shows your live Claude plan usage (session and weekly %) right in the menu bar.
 - **CLI** — Run `aistatus` in your terminal for a quick status check with colored output.
 
 ## Install
@@ -74,6 +74,16 @@ Exit codes: `0` all operational, `1` degraded/outage, `2` unknown/error.
 | Cursor | [status.cursor.com](https://status.cursor.com) |
 
 PRs welcome to add more!
+
+## Claude Usage
+
+The menu bar app can display your personal Claude plan usage — the same 5-hour session % and weekly % that Claude Code's `/usage` command shows. The number next to the dot is whichever limit you'll hit first.
+
+Requirements:
+
+- [Claude Code](https://claude.com/claude-code) installed and signed in (the app reuses its credentials from the macOS Keychain — you'll be asked to allow access once)
+
+If Claude Code isn't installed, the app simply shows the status dot as before.
 
 ## Contributing
 
