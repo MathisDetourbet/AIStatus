@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] - 2026-07-08
+
+### Added
+
+- Real-time Claude plan usage in the menu bar: live 5-hour session % and weekly %, the same figures Claude Code's `/usage` shows
+- Menu bar label shows the limiting usage % (whichever of session/weekly you'll hit first) next to the status dot
+- **Claude Usage** section in the dropdown with per-window percentages and reset times
+- Reuses Claude Code's OAuth credentials from the macOS Keychain; falls back to the plain status dot when Claude Code isn't installed
+
 ## [0.4.0] - 2026-04-01
 
 ### Added
@@ -42,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Claude (Anthropic) status monitoring via Statuspage.io API
 - 30-second automatic polling interval
 
+[0.5.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/MathisDetourbet/AIStatus/compare/v0.1.0...v0.2.0
