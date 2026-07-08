@@ -3,6 +3,7 @@ import AIStatusKit
 
 struct StatusMenuContent: View {
     let monitor: StatusMonitor
+    let usageMonitor: UsageMonitor
 
     var body: some View {
         ForEach(Array(monitor.providers), id: \.name) { provider in
@@ -21,6 +22,10 @@ struct StatusMenuContent: View {
                 }
             }
         }
+
+        Divider()
+
+        UsageSection(monitor: usageMonitor)
 
         Divider()
 
