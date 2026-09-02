@@ -36,15 +36,48 @@ jobs:
       - name: Create .app bundle
         run: ./scripts/bundle-app.sh "${{ steps.version.outputs.VERSION }}"
 
-      - name: Create release archives
+      - name: Import Developer ID certificate
+        env:
+          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          CERT_PATH="$RUNNER_TEMP/certificate.p12"
+          KEYCHAIN_PATH="$RUNNER_TEMP/signing.keychain-db"
+
+          echo -n "$MACOS_CERTIFICATE" | base64 --decode > "$CERT_PATH"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security import "$CERT_PATH" -P "$MACOS_CERTIFICATE_PWD" \
+            -k "$KEYCHAIN_PATH" -T /usr/bin/codesign
+          # Lets codesign use the key without an interactive prompt.
+          security set-key-partition-list -S apple-tool:,apple:,codesign: \
+            -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH" > /dev/null
+          security list-keychain -d user -s "$KEYCHAIN_PATH" login.keychain-db
+
+          rm -f "$CERT_PATH"
+
+      - name: Sign app
+        env:
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+        run: ./scripts/sign-app.sh build/AIStatusBar.app
+
+      - name: Notarize and staple app
+        env:
+          NOTARY_APPLE_ID: ${{ secrets.NOTARY_APPLE_ID }}
+          NOTARY_PASSWORD: ${{ secrets.NOTARY_PASSWORD }}
+          NOTARY_TEAM_ID: ${{ secrets.NOTARY_TEAM_ID }}
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          ./scripts/notarize-app.sh build/AIStatusBar.app \
+            "dist/AIStatusBar-${VERSION}-macos-universal.zip"
+
+      - name: Create CLI archive
         run: |
           mkdir -p dist
           VERSION="${{ steps.version.outputs.VERSION }}"
-
-          # Menu bar app as zip (ditto preserves macOS metadata)
-          ditto -c -k --keepParent build/AIStatusBar.app "dist/AIStatusBar-${VERSION}-macos-universal.zip"
-
-          # CLI tool as tarball
           tar -czf "dist/aistatus-${VERSION}-macos-universal.tar.gz" \
             -C .build/apple/Products/Release aistatus
 
@@ -117,3 +150,7 @@ jobs:
             -H "Content-Type: application/json" \
             https://api.github.com/repos/MathisDetourbet/homebrew-tap/contents/Casks/aistatusbar.rb \
             -d "{\"message\":\"aistatusbar ${VERSION}\",\"content\":\"${ENCODED}\",\"sha\":\"${FILE_SHA}\"}"
+
+      - name: Clean up signing keychain
+        if: always()
+        run: security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true
