@@ -59,9 +59,19 @@ jobs:
 
           rm -f "$CERT_PATH"
 
+          # Fail here with a readable diagnostic rather than a bare "no identity
+          # found" from codesign two steps later. The certificate's common name
+          # is public — it is embedded in every signed release.
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH"
+          security find-identity -v -p codesigning "$KEYCHAIN_PATH" \
+            | grep -q "Developer ID Application" || {
+              echo "error: the imported certificate is not a Developer ID Application cert" >&2
+              exit 1
+            }
+
       - name: Sign app
         env:
-          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          MACOS_KEYCHAIN: ${{ runner.temp }}/signing.keychain-db
         run: ./scripts/sign-app.sh build/AIStatusBar.app
 
       - name: Notarize and staple app
