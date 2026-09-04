@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.1] - 2026-09-04
+
+### Changed
+
+- AIStatusBar.app is now signed with a Developer ID certificate and notarized by Apple. First launch no longer requires right-clicking the app and selecting "Open" to bypass Gatekeeper.
+
 ## [0.5.0] - 2026-07-08
 
 ### Added
