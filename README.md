@@ -35,7 +35,7 @@ brew install --cask aistatusbar
 
 Pre-built universal binaries (arm64 + x86\_64) are available on the [Releases](https://github.com/MathisDetourbet/AIStatus/releases) page.
 
-> **Note:** The app is not yet notarized. On first launch, right-click the app and select "Open" to bypass Gatekeeper.
+The app is signed with a Developer ID certificate and notarized by Apple, so it opens normally on first launch.
 
 ### From source
 
